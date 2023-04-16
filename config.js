@@ -10,10 +10,17 @@ class Block {
     }
 }
 
-function operand(op) {
-    if(op == "null") return op;
-    else if(parseFloat(op) == op) return op;
-    else return "$" + op;
+function operand(op, type) {
+    if (type) {
+        if (type == "Text") return `"${op}"`;
+        else if (type == "Number") return op;
+        else if (type == "Variable") return `$${op}`;
+        else if (type == "PHP Expression") return `(${op})`;
+    } else {
+        if (op == "null") return op;
+        else if (parseFloat(op) == op) return op;
+        else return "$" + op;
+    }
 }
 
 class Var extends Block {
@@ -24,16 +31,13 @@ class Var extends Block {
         super();
         this.inputs = [
             { type: "text", placeholder: "Name", label: "Set", name: "identifier", value: i => `var${i}` },
-            { type: "select", placeholder: "Type", label: "", name: "type", options: ["Text", "Number", "Other Variable", "Expression"], value: "Text" },
-            { type: "text", placeholder: "Value", label: "to", name: "value", value: "null" }
+            { type: "text", placeholder: "Value", label: "to", name: "value", value: "null" },
+            { type: "select", placeholder: "Type", label: "", name: "type", options: ["Text", "Number", "Variable", "PHP Expression"], value: "Number" },
         ];
     }
 
     toPHP() {
-        if(this.type == "Text") return `$${this.identifier} = "${this.value}";`;
-        else if(this.type == "Number") return `$${this.identifier} = ${this.value};`;
-        else if(this.type == "Other Variable") return `$${this.identifier} = $${this.value};`;
-        else if(this.type == "Expression") return `$${this.identifier} = (${this.value});`;
+        return `$${this.identifier} = ${operand(this.value, this.type)};`;
     }
 }
 
@@ -44,17 +48,17 @@ class Print extends Block {
     constructor() {
         super();
         this.inputs = [
-            { type: "select", placeholder: "Type", label: "", name: "type", options: ["Text", "Number", "Variable", "Expression"], value: "Text" },
-            { type: "text", placeholder: "Type here", label: "", name: "expression" },
+            { type: "select", placeholder: "Type", label: "", name: "type", options: ["Text", "Number", "Variable", "PHP Expression"], value: "Text" },
+            { type: "text", placeholder: "Type here", label: "", name: "PHP Expression" },
             { type: "checkbox", placeholder: "New Line", label: "New Line?", name: "newLine", checked: false },
         ];
     }
 
     toPHP() {
-        if(this.type == "Text") return `echo "${this.expression}${this.newLine ? "&ltbr&gt" : ""}"`;
-        else if(this.type == "Number") return `echo ${this.expression}${this.newLine ? '."&ltbr&gt"' : ""}`;
-        else if(this.type == "Variable") return `echo $${this.expression}${this.newLine ? '."&ltbr&gt"' : ""}`;
-        else if(this.type == "Expression") return `echo (${this.expression})${this.newLine ? '."&ltbr&gt"' : ""}`;
+        if (this.newLine)
+            return `echo ${operand(this.expression, this.type)} . "<br>";`;
+        else
+            return `echo ${operand(this.expression, this.type)};`;
     }
 }
 
@@ -85,16 +89,18 @@ class If extends Block {
     constructor() {
         super();
         this.inputs = [
+            { type: "select", placeholder: "Type", label: "", name: "type1", options: ["Text", "Number", "Variable", "PHP Expression"], value: "Variable" },
             { type: "text", placeholder: "Operand", label: "", name: "operand1" },
             { type: "select", placeholder: "Operator", label: "", name: "operator", options: ["==", "!=", ">", "<", ">=", "<="] },
+            { type: "select", placeholder: "Type", label: "", name: "type2", options: ["Text", "Number", "Variable", "PHP Expression"], value: "Number" },
             { type: "text", placeholder: "Operand", label: "", name: "operand2" },
-            
+
         ];
         this.canHaveChild = true;
     }
 
     toPHP() {
-        return `if (${operand(this.operand1)} ${this.operator} ${operand(this.operand2)}) {`;
+        return `if (${operand(this.operand1, this.type1)} ${this.operator} ${operand(this.operand2, this.type2)}) {`;
     }
 }
 
@@ -111,14 +117,14 @@ class While extends If {
     }
 
     toPHP() {
-        if(this.once)
-            return `do {`;
-        else return `while (${operand(this.operand1)} ${this.operator} ${operand(this.operand2)}) {`;
+        if (this.once)
+            return `do {`
+        else return `while (${operand(this.operand1, this.type1)} ${this.operator} ${operand(this.operand2, this.type2)}) {`
     }
 
     endPHP() {
-        if(this.once)
-            return `} while (${operand(this.operand1)} ${this.operator} ${operand(this.operand2)})`
+        if (this.once)
+            return `} while (${operand(this.operand1, this.type1)} ${this.operator} ${operand(this.operand2, this.type2)})`
         else return `}`
     }
 }
@@ -150,7 +156,7 @@ class ElseIf extends If {
     }
 
     toPHP() {
-        return `elseif (${operand(this.operand1)} ${this.operator} ${operand(this.operand2)}) {`;
+        return `elseif (${operand(this.operand1, this.type1)} ${this.operator} ${operand(this.operand2, this.type2)}) {`;
     }
 }
 
@@ -170,7 +176,7 @@ class Arithematic extends Block {
     }
 
     toPHP() {
-        if(this.operator === "^")
+        if (this.operator === "^")
             return `$${this.result} = pow(${operand(this.operand1)},${operand(this.operand2)});`;
         else
             return `$${this.result} = ${operand(this.operand1)} ${this.operator} ${operand(this.operand2)};`;
@@ -189,13 +195,14 @@ class WriteFile extends Block {
         this.inputs = [
             { type: "text", placeholder: "File Name", label: "Write to", name: "filename" },
             { type: "text", placeholder: "Text", label: "", name: "text" },
+            { type: "select", placeholder: "Type", label: "", name: "type", options: ["Text", "Variable", "PHP Expression"], value: "Text" },
             { type: "checkbox", placeholder: "Append", label: "Append?", name: "append", checked: false },
         ];
         this.canHaveChild = false;
     }
 
     toPHP() {
-        return `file_put_contents("${this.filename}", "${this.text}" ${this.append ? ",FILE_APPEND" : ""});`;
+        return `file_put_contents("${this.filename}", ${operand(this.text, this.type)} ${this.append ? ",FILE_APPEND" : ""});`;
     }
 }
 
@@ -228,22 +235,23 @@ class FunctionDef extends Block {
     constructor() {
         super();
         this.inputs = [
-            { type: "text", placeholder: "Function Name", label: "Function", name: "name" },
-            { type: "text", placeholder: "Comma Separated", label: "Parameters", name: "parameters", value: "param" },
+            { type: "text", placeholder: "Function Name", label: "Function", name: "name", value: i => `function${i}` },
+            { type: "text", placeholder: "Comma Separated", label: "Parameters", name: "parameters", value: "" },
             // { type: "text", placeholder: "Value", label: "Return", name: "value" },
-            // { type: "select", placeholder: "Type", label: "Type", name: "type", options: ["Text", "Number", "Variable", "Expression"], value: "Text" },
+            // { type: "select", placeholder: "Type", label: "Type", name: "type", options: ["Text", "Number", "Variable", "PHP Expression"], value: "Text" },
         ];
         this.canHaveChild = true;
     }
 
     toPHP() {
+        if(this.parameters == "") return `function ${this.name}() {`;
         return `function ${this.name}($${this.parameters.replace(/\s/g, "").split(",").join(", $")}) {`
     }
 
     // endPHP() {
     //     if(this.type === "Variable")
     //         return `return $${this.value}; }`;
-    //     else if(this.type === "Expression")
+    //     else if(this.type === "PHP Expression")
     //         return `return ${this.value}; }`;
     //     else
     //         return `return "${this.value}";}`;
@@ -260,20 +268,15 @@ class Return extends Block {
         super();
         this.inputs = [
             { type: "text", placeholder: "Value", label: "Return", name: "value" },
-            { type: "select", placeholder: "Type", label: "", name: "type", options: ["Text", "Number", "Variable", "Expression"], value: "Text" },
+            { type: "select", placeholder: "Type", label: "", name: "type", options: ["Text", "Number", "Variable", "PHP Expression"], value: "Text" },
         ];
     }
 
     toPHP() {
-        if(this.type === "Variable")
-            return `return $${this.value};`;
-        else if(this.type === "Expression")
-            return `return ${this.value};`;
-        else
-            return `return "${this.value}";`;
+        return `return ${operand(this.value, this.type)};`;
     }
 
-    get parents () {
+    get parents() {
         return Return.parents;
     }
 }
@@ -296,7 +299,7 @@ class CallFunction extends Block {
         return `${this.name}(${this.parameters.replace(/\s/g, "").split(",").map(operand).join(", ")});`
     }
 }
-    
+
 
 
 let toRender = [Print, Var, Arithematic, "Conditionals", If, ElseIf, Else, "Loops", For, While, "Files", ReadFile, WriteFile, "Functions", FunctionDef, CallFunction, Return];
@@ -306,6 +309,6 @@ let toRender = [Print, Var, Arithematic, "Conditionals", If, ElseIf, Else, "Loop
 // Function creation ✅
 // Loops ✅
 // Conditional statements ✅
-// Reading a text file
-// Writing a text file
+// Reading a text file ✅
+// Writing a text file ✅
 // Creating an output node. ✅

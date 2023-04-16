@@ -243,3 +243,14 @@ function _generateCode(el, indent) {
         }
     }
 }
+
+function execAndGetPHPOutput() {
+    let code = document.getElementById("output").innerText;
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "php.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.send("code=" + encodeURIComponent(code));
+    xhr.onload = () => {
+        document.getElementById("output").innerHTML = xhr.responseText;
+    }
+}
