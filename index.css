@@ -1,0 +1,386 @@
+* {
+  box-sizing: border-box;
+  padding: 0rem;
+  margin: 0rem;
+  font-family: Raleway;
+}
+*::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+*::-webkit-scrollbar-track {
+  background: rgb(213, 213, 213);
+  border-radius: 1rem;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgb(170, 170, 170);
+  border-radius: 1rem;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: rgb(139, 139, 139);
+}
+
+nav {
+  background-color: rgb(0, 0, 0);
+  display: flex;
+  justify-content: center;
+}
+
+.nav {
+  height: 50px;
+  width: 100%;
+  color: white;
+  max-width: 1000px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem;
+}
+
+a {
+  color: white;
+}
+
+.main {
+  display: grid;
+  grid-template-columns: 1fr 3fr 1.5fr;
+  padding: 1rem;
+  max-height: 100vh;
+}
+.main .title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 2rem;
+}
+
+input, select {
+  border-radius: 10rem;
+  padding: 0.5rem;
+  border: none;
+  outline: none;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+body {
+  overflow-y: hidden;
+}
+
+#droppables {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  max-height: calc(97vh - 50px);
+  overflow-y: auto;
+  width: -moz-max-content;
+  width: max-content;
+  position: relative;
+}
+#droppables > .title {
+  top: 0px;
+  background-color: rgb(29, 29, 29);
+  padding: 1rem;
+  color: white;
+  border-radius: 1rem;
+}
+#droppables .droppable {
+  width: 100%;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.5rem;
+  font-size: 2rem;
+  cursor: move;
+}
+#droppables .droppable.function {
+  font-size: 1.5rem;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+code {
+  font-family: "Courier New", Courier, monospace;
+}
+
+#blocksContainer {
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  max-height: calc(97vh - 50px);
+  overflow-y: auto;
+  width: -moz-max-content;
+  width: max-content;
+  align-items: center;
+  width: 100%;
+  background-size: 60px 60px;
+  background-attachment: fixed;
+  background-color: rgb(243, 243, 243);
+  background-image: radial-gradient(circle, #797979 1px, rgba(46, 46, 46, 0) 1px);
+}
+#blocksContainer > .title {
+  top: 0px;
+  position: sticky;
+  background-color: rgb(29, 29, 29);
+  padding: 1rem;
+  color: white;
+  border-radius: 1rem;
+}
+#blocksContainer #blocks {
+  padding: 1rem 0rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: left;
+  width: 100%;
+  position: relative;
+}
+#blocksContainer #blocks #droppableRegion {
+  background-color: blueviolet;
+  color: white;
+  padding: 1rem;
+  border-radius: 1rem;
+  text-align: center;
+  order: 1;
+  z-index: 1;
+}
+#blocksContainer #blocks > .block {
+  margin-left: 0rem !important;
+}
+#blocksContainer #blocks .block {
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.166);
+  display: flex;
+  flex-direction: column;
+  font-size: 1.25rem;
+  margin-left: 2rem;
+  border-radius: 1rem;
+  width: -moz-min-content;
+  width: min-content;
+  cursor: grab;
+  opacity: 0;
+  animation-name: fadeIn;
+  animation-duration: 500ms;
+  animation-fill-mode: forwards;
+  position: relative;
+  transition-duration: 300ms;
+}
+#blocksContainer #blocks .block:has(.block) {
+  padding-bottom: 1rem;
+}
+#blocksContainer #blocks .block > :first-child {
+  margin-left: 0rem !important;
+}
+#blocksContainer #blocks .block .title {
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  text-align: left;
+  font-size: 1.25rem;
+  background-color: rgba(19, 19, 19, 0.475);
+  color: white;
+  border-radius: 1rem 1rem 0rem 0rem;
+}
+#blocksContainer #blocks .block .deleteBtn {
+  display: inline;
+  float: right;
+  text-align: right;
+  cursor: pointer;
+  color: white;
+}
+#blocksContainer #blocks .block .container {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem;
+  align-items: center;
+}
+#blocksContainer #blocks .block:has(.droppableRegion.before.dragging) {
+  margin-top: 1rem;
+}
+#blocksContainer #blocks .block:has(.droppableRegion.after.dragging) {
+  margin-bottom: 2rem;
+}
+#blocksContainer #blocks .block:has(.droppableRegion.inner.dragging) {
+  padding-bottom: 3rem;
+}
+#blocksContainer #blocks .block .droppableRegion {
+  position: absolute;
+  height: 50%;
+  width: 100%;
+  transform: translateX(-1rem);
+  pointer-events: none;
+}
+#blocksContainer #blocks .block .droppableRegion.before {
+  top: 0px;
+  border-radius: 1rem 1rem 0rem 0rem;
+}
+#blocksContainer #blocks .block .droppableRegion.inner {
+  top: 50%;
+  transform: translateY(-50%) translateX(-1rem);
+}
+#blocksContainer #blocks .block .droppableRegion.after {
+  bottom: 0px;
+  border-radius: 0rem 0rem 1rem 1rem;
+}
+#blocksContainer #blocks .block .block {
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+#blocksContainer #blocks .block label {
+  font-size: 0.9rem;
+}
+#blocksContainer #blocks .block.if, #blocksContainer #blocks .block.elseif, #blocksContainer #blocks .block.else {
+  min-width: 150px;
+}
+#blocksContainer #blocks .block.if .container, #blocksContainer #blocks .block.elseif .container, #blocksContainer #blocks .block.else .container {
+  padding-right: 2rem;
+}
+#blocksContainer #blocks .block.if .container input[type=number], #blocksContainer #blocks .block.elseif .container input[type=number], #blocksContainer #blocks .block.else .container input[type=number] {
+  width: 50px;
+}
+#blocksContainer #blocks .block.if .container input, #blocksContainer #blocks .block.elseif .container input, #blocksContainer #blocks .block.else .container input {
+  width: 100px;
+}
+#blocksContainer #blocks .block.while .container input[type=number] {
+  width: 50px;
+}
+#blocksContainer #blocks .block.while .container input {
+  width: 100px;
+}
+#blocksContainer #blocks .block.print .container input {
+  width: 100px;
+}
+#blocksContainer #blocks .block.for .container input[type=number], #blocksContainer #blocks .block.while .container input[type=number] {
+  width: 50px;
+}
+#blocksContainer #blocks .block.for .container input, #blocksContainer #blocks .block.while .container input {
+  width: 100px;
+}
+#blocksContainer #blocks .block.var input {
+  width: 125px;
+}
+#blocksContainer #blocks .block.math input {
+  width: 100px;
+}
+#blocksContainer #blocks .block.math label {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+#blocksContainer #blocks .block.print input[type=text] {
+  width: 150px !important;
+}
+#blocksContainer #blocks .block.print input[type=checkbox] {
+  width: -moz-min-content;
+  width: min-content;
+}
+#blocksContainer #blocks .block.read input[type=text], #blocksContainer #blocks .block.write input[type=text] {
+  width: 150px !important;
+}
+#blocksContainer #blocks .block.read input[type=checkbox] {
+  width: -moz-min-content;
+  width: min-content;
+}
+#blocksContainer #blocks .block.write input[type=checkbox] {
+  width: -moz-min-content;
+  width: min-content;
+}
+#blocksContainer #blocks .block.function > .container, #blocksContainer #blocks .block.call > .container {
+  display: flex;
+}
+#blocksContainer #blocks .block.function > .container input:nth-child(2), #blocksContainer #blocks .block.call > .container input:nth-child(2) {
+  width: 100px;
+}
+#blocksContainer #blocks .block.function > .container input:nth-child(4), #blocksContainer #blocks .block.call > .container input:nth-child(4) {
+  width: 250px;
+}
+
+#outputContainer {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 1rem;
+  max-height: calc(97vh - 50px);
+}
+#outputContainer .outputcode {
+  gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+#outputContainer .outputcode button {
+  border-radius: 10rem;
+  background-color: rgb(123, 0, 255);
+  border: 0px solid;
+  padding: 1rem;
+  color: white;
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+#outputContainer .outputcode pre {
+  flex-grow: 1;
+  height: 100%;
+  overflow: auto;
+}
+#outputContainer .outputcode #output {
+  display: block;
+  background-color: rgb(223, 223, 223);
+  border-radius: 1rem;
+  padding: 1rem;
+  overflow: auto;
+  max-width: 400px;
+  height: 300px;
+  max-height: 400px;
+}
+#outputContainer #outputprint {
+  display: block;
+  background-color: rgb(223, 223, 223);
+  border-radius: 1rem;
+  padding: 1rem;
+  overflow: auto;
+  max-width: 400px;
+}
+
+.if, .elseif, .else {
+  background-color: rgb(0, 187, 255);
+}
+
+.function, .call, .return {
+  background-color: rgb(144, 92, 255);
+  color: white;
+}
+
+.read, .write {
+  background-color: rgb(255, 92, 92);
+}
+
+.while {
+  background-color: rgb(255, 193, 92);
+}
+
+.print {
+  background-color: rgb(209, 255, 92);
+}
+
+.for, .while {
+  color: white;
+  background-color: rgb(0, 132, 255);
+}
+
+.var {
+  background-color: rgb(255, 193, 92);
+}
+
+.math {
+  background-color: rgb(0, 196, 95);
+}
+
+#outputContainer {
+  padding: 1rem;
+}/*# sourceMappingURL=index.css.map */
