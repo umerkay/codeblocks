@@ -53,7 +53,8 @@ a {
   font-size: 2rem;
 }
 
-input, select {
+input,
+select {
   border-radius: 10rem;
   padding: 0.5rem;
   border: none;
@@ -171,6 +172,8 @@ code {
   animation-name: fadeIn;
   animation-duration: 500ms;
   animation-fill-mode: forwards;
+  position: relative;
+  transition-duration: 0ms;
   position: relative;
   transition-duration: 300ms;
 }
@@ -292,11 +295,40 @@ code {
   width: -moz-min-content;
   width: min-content;
 }
+#blocksContainer #blocks .block.function {
+  min-width: 400px;
+}
+#blocksContainer #blocks .block.call {
+  min-width: 300px;
+}
 #blocksContainer #blocks .block.function > .container, #blocksContainer #blocks .block.call > .container {
   display: flex;
+  align-items: baseline;
+  flex-direction: column;
+}
+#blocksContainer #blocks .block.function > .container .addArgBtn, #blocksContainer #blocks .block.call > .container .addArgBtn {
+  font-size: 1rem;
+  background-color: rgba(0, 0, 0, 0.534);
+  border-radius: 10rem;
+  padding: 0.4rem 1.25rem;
+  cursor: pointer;
+}
+#blocksContainer #blocks .block.function > .container .args, #blocksContainer #blocks .block.call > .container .args {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-left: 0.5rem;
+}
+#blocksContainer #blocks .block.function > .container .args .arg, #blocksContainer #blocks .block.call > .container .args .arg {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+#blocksContainer #blocks .block.function > .container .args .arg input, #blocksContainer #blocks .block.call > .container .args .arg input {
+  width: 100px;
 }
 #blocksContainer #blocks .block.function > .container input:nth-child(2), #blocksContainer #blocks .block.call > .container input:nth-child(2) {
-  width: 100px;
+  width: 150px;
 }
 #blocksContainer #blocks .block.function > .container input:nth-child(4), #blocksContainer #blocks .block.call > .container input:nth-child(4) {
   width: 250px;
@@ -338,25 +370,39 @@ code {
   height: 300px;
   max-height: 400px;
 }
+#outputContainer .lno {
+  display: inline-block;
+  width: 20px;
+}
 #outputContainer #outputprint {
   display: block;
-  background-color: rgb(223, 223, 223);
+  background-color: rgb(56, 56, 56);
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+  color: white;
   border-radius: 1rem;
   padding: 1rem;
   overflow: auto;
-  max-width: 400px;
+}
+#outputContainer #outputprint.loading {
+  background-color: rgb(155, 155, 155);
 }
 
-.if, .elseif, .else {
+.if,
+.elseif,
+.else {
   background-color: rgb(0, 187, 255);
 }
 
-.function, .call, .return {
+.function,
+.call,
+.return {
   background-color: rgb(144, 92, 255);
   color: white;
 }
 
-.read, .write {
+.read,
+.write {
   background-color: rgb(255, 92, 92);
 }
 
@@ -368,7 +414,8 @@ code {
   background-color: rgb(209, 255, 92);
 }
 
-.for, .while {
+.for,
+.while {
   color: white;
   background-color: rgb(0, 132, 255);
 }

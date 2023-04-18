@@ -3,19 +3,23 @@
     padding: 0rem;
     margin: 0rem;
     font-family: Raleway;
+
     //give a pretty scroll bar to everything
     &::-webkit-scrollbar {
         width: 0.5rem;
         height: 0.5rem;
     }
+
     &::-webkit-scrollbar-track {
         background: rgb(213, 213, 213);
         border-radius: 1rem;
     }
+
     &::-webkit-scrollbar-thumb {
         background: rgb(170, 170, 170);
         border-radius: 1rem;
     }
+
     &::-webkit-scrollbar-thumb:hover {
         background: rgb(139, 139, 139);
     }
@@ -27,6 +31,7 @@ nav {
     display: flex;
     justify-content: center;
 }
+
 .nav {
     height: 50px;
     width: 100%;
@@ -45,16 +50,19 @@ a {
 .main {
     display: grid;
     grid-template-columns: 1fr 3fr 1.5fr;
+
     .title {
         text-align: center;
         font-weight: bold;
         font-size: 2rem;
     }
+
     padding: 1rem;
     max-height: 100vh;
 }
 
-input, select {
+input,
+select {
     border-radius: 10rem;
     padding: 0.5rem;
     border: none;
@@ -78,7 +86,8 @@ body {
     width: max-content;
 
     position: relative;
-    > .title {
+
+    >.title {
         top: 0px;
         // position: sticky;
         background-color: rgb(29, 29, 29);
@@ -99,23 +108,26 @@ body {
         border-radius: 0.5rem;
         font-size: 2rem;
         cursor: move;
+
         &.function {
             font-size: 1.5rem;
         }
+
         // &.return {
         //     background-color: rgb(224, 224, 224);
         // }
     }
 }
-        
+
 @keyframes fadeIn {
     from {
-      opacity: 0;
+        opacity: 0;
     }
+
     to {
-      opacity: 1;
+        opacity: 1;
     }
-  }
+}
 
 code {
     font-family: 'Courier New', Courier, monospace;
@@ -133,20 +145,21 @@ code {
     align-items: center;
     width: 100%;
     background-size: 60px 60px;
-        background-attachment: fixed;
-        background-color: rgb(243, 243, 243);
+    background-attachment: fixed;
+    background-color: rgb(243, 243, 243);
 
-        background-image: radial-gradient(circle, #797979 1px, rgba(46, 46, 46, 0) 1px);
-        
-    > .title {
+    background-image: radial-gradient(circle, #797979 1px, rgba(46, 46, 46, 0) 1px);
+
+    >.title {
         top: 0px;
         position: sticky;
         background-color: rgb(29, 29, 29);
         padding: 1rem;
         color: white;
         border-radius: 1rem;
-        
+
     }
+
     // gap: 1rem;
 
     #blocks {
@@ -158,6 +171,7 @@ code {
         justify-content: left;
         width: 100%;
         position: relative;
+
         #droppableRegion {
             background-color: blueviolet;
             color: white;
@@ -171,10 +185,10 @@ code {
             // bottom: 0px;
         }
 
-        > .block {
+        >.block {
             margin-left: 0rem !important;
         }
-    
+
         .block {
             //light box shadow
             box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.166);
@@ -189,6 +203,29 @@ code {
             animation-name: fadeIn;
             animation-duration: 500ms;
             animation-fill-mode: forwards;
+            position: relative;
+
+            transition-duration: 0ms;
+
+            // &.collapseParent {
+            //     transition-duration: 0ms;
+            //     padding-bottom: 0px !important;
+            //     & > .title::before {
+            //         content: "🔒 ";
+            //     }
+            //     > * {
+            //         visibility: hidden !important;
+            //         height: 0px;
+            //     }
+            //     .container {
+            //         padding: 0px;
+            //     }
+            //     > .title {
+            //         visibility: visible !important;
+            //         height: auto;
+            //         border-radius: 1rem;
+            //     }
+            // }
 
             &:has(.block) {
                 padding-bottom: 1rem;
@@ -197,6 +234,7 @@ code {
             > :first-child {
                 margin-left: 0rem !important;
             }
+
             .title {
                 padding: 0.5rem 1rem;
                 font-weight: bold;
@@ -206,6 +244,7 @@ code {
                 color: white;
                 border-radius: 1rem 1rem 0rem 0rem;
             }
+
             .deleteBtn {
                 // flex-grow: 2;
                 display: inline;
@@ -214,6 +253,7 @@ code {
                 cursor: pointer;
                 color: white;
             }
+
             .container {
                 display: flex;
                 gap: 0.5rem;
@@ -229,7 +269,7 @@ code {
             &:has(.droppableRegion.before.dragging) {
                 margin-top: 1rem;
             }
-            
+
             &:has(.droppableRegion.after.dragging) {
                 margin-bottom: 2rem;
             }
@@ -249,11 +289,13 @@ code {
                     top: 0px;
                     border-radius: 1rem 1rem 0rem 0rem;
                 }
+
                 &.inner {
                     top: 50%;
                     transform: translateY(-50%) translateX(-1rem);
                     // border-radius: 1rem 1rem 0rem 0rem;
                 }
+
                 &.after {
                     bottom: 0px;
                     border-radius: 0rem 0rem 1rem 1rem;
@@ -269,13 +311,18 @@ code {
                 font-size: 0.9rem;
             }
 
-            &.if, &.elseif, &.else {
+            &.if,
+            &.elseif,
+            &.else {
                 min-width: 150px;
+
                 .container {
                     padding-right: 2rem;
+
                     input[type="number"] {
                         width: 50px;
                     }
+
                     input {
                         width: 100px;
                     }
@@ -287,6 +334,7 @@ code {
                     input[type="number"] {
                         width: 50px;
                     }
+
                     input {
                         width: 100px;
                     }
@@ -301,40 +349,48 @@ code {
                 }
             }
 
-            &.for, &.while {
+            &.for,
+            &.while {
                 .container {
                     input[type="number"] {
                         width: 50px;
                     }
+
                     input {
                         width: 100px;
                     }
                 }
             }
+
             &.var {
                 input {
                     width: 125px;
                 }
             }
+
             &.math {
                 input {
                     width: 100px;
                 }
+
                 label {
                     font-size: 1.5rem;
                     font-weight: bold;
                 }
             }
+
             &.print {
                 input[type="text"] {
                     width: 150px !important;
                 }
+
                 input[type="checkbox"] {
                     width: min-content;
                 }
             }
 
-            &.read, &.write {
+            &.read,
+            &.write {
                 input[type="text"] {
                     width: 150px !important;
                 }
@@ -352,21 +408,61 @@ code {
                 }
             }
 
-            &.function, &.call {
-                > .container {
+            &.function {
+                min-width: 400px;
+            }
+
+            &.call {
+                min-width: 300px;
+            }
+
+            &.function,
+            &.call {
+                >.container {
                     display: flex;
+
+                    .addArgBtn {
+                        font-size: 1rem;
+                        background-color: rgba(0, 0, 0, 0.534);
+                        border-radius: 10rem;
+                        padding: 0.4rem 1.25rem;
+                        cursor: pointer;
+                    }
+
                     // grid-template-columns: 1fr 1fr 1fr 1fr;
                     // input:first-child{
                     //     width: 80px;
                     // }
-                    input:nth-child(2){
-                        width: 100px;
+
+                    align-items: baseline;
+                    flex-direction: column;
+
+                    .args {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 0.25rem;
+                        margin-left: 0.5rem;
+
+                        .arg {
+                            display: flex;
+                            align-items: center;
+                            gap: 0.5rem;
+                            input {
+                                width: 100px;
+                            }
+                        }
                     }
-                    input:nth-child(4){
+
+                    input:nth-child(2) {
+                        width: 150px;
+                    }
+
+                    input:nth-child(4) {
                         width: 250px;
                     }
                 }
             }
+
             // border-radius: 1rem;
         }
     }
@@ -377,6 +473,7 @@ code {
     grid-template-rows: 1fr 1fr;
     gap: 1rem;
     max-height: calc(97vh - 50px);
+
     .outputcode {
         gap: 1rem;
         display: flex;
@@ -392,11 +489,13 @@ code {
             font-size: 1.25rem;
             cursor: pointer;
         }
+
         pre {
             flex-grow: 1;
             height: 100%;
             overflow: auto;
         }
+
         #output {
             display: block;
             background-color: rgb(223, 223, 223);
@@ -408,45 +507,73 @@ code {
             max-height: 400px;
         }
     }
+    .lno {
+        // float: left;
+        display: inline-block;
+        width: 20px;
+    }
+
     #outputprint {
         display: block;
-        background-color: rgb(223, 223, 223);
+        // background-color: rgb(223, 223, 223);
+        background-color: rgb(56, 56, 56);
+        font-family: 'Courier New', Courier, monospace;
+        font-weight: bold;
+        color: white;
         border-radius: 1rem;
         padding: 1rem;
         overflow: auto;
-        max-width: 400px;
+
+        // max-width: 400px;
+        &.loading {
+            background-color: rgb(155, 155, 155);
+        }
+
         // height: 100%;
     }
 }
 
-.if, .elseif, .else {
+.if,
+.elseif,
+.else {
     background-color: rgb(0, 187, 255);
 }
-.function, .call, .return {
+
+.function,
+.call,
+.return {
     background-color: rgb(144, 92, 255);
     color: white;
 }
-.read, .write {
+
+.read,
+.write {
     background-color: rgb(255, 92, 92);
 }
+
 .while {
     background-color: rgb(255, 193, 92);
 }
+
 .print {
     background-color: rgb(209, 255, 92);
 }
-.for, .while {
+
+.for,
+.while {
     color: white;
     background-color: rgb(0, 132, 255);
 }
+
 .var {
     background-color: rgb(255, 193, 92);
 }
+
 .math {
     background-color: rgb(0, 196, 95);
 }
 
 #outputContainer {
     padding: 1rem;
-    
+
 }

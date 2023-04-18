@@ -17,6 +17,7 @@ function operand(op, type) {
         else if (type == "Variable") return `$${op}`;
         else if (type == "PHP Expression") return `(${op})`;
     } else {
+        console.log(parseFloat(op), op)
         if (op == "null") return op;
         else if (parseFloat(op) == op) return op;
         else return "$" + op;
@@ -31,7 +32,7 @@ class Var extends Block {
         super();
         this.inputs = [
             { type: "text", placeholder: "Name", label: "Set", name: "identifier", value: i => `var${i}` },
-            { type: "text", placeholder: "Value", label: "to", name: "value", value: "null" },
+            { type: "text", placeholder: "Value", label: "to", name: "value", value: 0 },
             { type: "select", placeholder: "Type", label: "", name: "type", options: ["Text", "Number", "Variable", "PHP Expression"], value: "Number" },
         ];
     }
@@ -49,14 +50,14 @@ class Print extends Block {
         super();
         this.inputs = [
             { type: "select", placeholder: "Type", label: "", name: "type", options: ["Text", "Number", "Variable", "PHP Expression"], value: "Text" },
-            { type: "text", placeholder: "Type here", label: "", name: "PHP Expression" },
+            { type: "text", placeholder: "Type here", label: "", name: "expression" },
             { type: "checkbox", placeholder: "New Line", label: "New Line?", name: "newLine", checked: false },
         ];
     }
 
     toPHP() {
         if (this.newLine)
-            return `echo ${operand(this.expression, this.type)} . "<br>";`;
+            return `echo ${operand(this.expression, this.type)} . "&ltbr&gt";`;
         else
             return `echo ${operand(this.expression, this.type)};`;
     }
@@ -236,7 +237,7 @@ class FunctionDef extends Block {
         super();
         this.inputs = [
             { type: "text", placeholder: "Function Name", label: "Function", name: "name", value: i => `function${i}` },
-            { type: "text", placeholder: "Comma Separated", label: "Parameters", name: "parameters", value: "" },
+            // { type: "text", placeholder: "Comma Separated", label: "Parameters", name: "parameters", value: "" },
             // { type: "text", placeholder: "Value", label: "Return", name: "value" },
             // { type: "select", placeholder: "Type", label: "Type", name: "type", options: ["Text", "Number", "Variable", "PHP Expression"], value: "Text" },
         ];
@@ -244,8 +245,13 @@ class FunctionDef extends Block {
     }
 
     toPHP() {
-        if(this.parameters == "") return `function ${this.name}() {`;
-        return `function ${this.name}($${this.parameters.replace(/\s/g, "").split(",").join(", $")}) {`
+        if(this.args) {
+            return `function ${this.name}(${this.args.map(x => "$" + x.name)}) {`
+        }
+        return `function ${this.name}() {`
+
+        // if(this.parameters == "") return `function ${this.name}() {`;
+        // return `function ${this.name}($${this.parameters.replace(/\s/g, "").split(",").join(", $")}) {`
     }
 
     // endPHP() {
@@ -290,13 +296,26 @@ class CallFunction extends Block {
     constructor() {
         super();
         this.inputs = [
+            { type: "text", placeholder: "Variable", label: "Store in (Optional)", name: "result" },
             { type: "text", placeholder: "Function Name", label: "Call", name: "name" },
-            { type: "text", placeholder: "Comma Separated", label: "Parameters", name: "parameters", value: "param" },
+            // { type: "text", placeholder: "Comma Separated", label: "Parameters", name: "parameters", value: "param" },
         ];
     }
 
     toPHP() {
-        return `${this.name}(${this.parameters.replace(/\s/g, "").split(",").map(operand).join(", ")});`
+        if(this.result) {
+            if(this.args) {
+                return `$${this.result} = ${this.name}(${this.args.map(x => operand(x.name, x.type)).join(", ")});`
+            }
+            return `$${this.result} = ${this.name}();`
+        } else {
+            if(this.args) {
+                return `${this.name}(${this.args.map(x => operand(x.name, x.type)).join(", ")});`
+            }
+            return `${this.name}();`
+        }
+        // return `${this.name}(${this.args.map(x => operand(x.name, x.type))});`
+        // return `${this.name}(${this.parameters.replace(/\s/g, "").split(",").map(x => operand(x)).join(", ")});`
     }
 }
 
