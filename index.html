@@ -35,13 +35,19 @@
         </div>
         <div id="outputContainer">
             <div class="outputcode">
-                <button onclick="generateCode()">💻 Generate PHP</button>
+                <select id="lang">
+                    <option value="Python">Python</option>
+                    <option value="JS">JavaScript</option>
+                    <option value="PHP">PHP</option>
+                    <option value="C++">C++</option>
+                </select>
+                <button onclick="generateCode()">💻 Generate</button>
                 <pre><code id="output"></code></pre>
-                <button onclick="generateCode()">⏩ Execute PHP</button>
+                <!-- <button onclick="generateCode()">⏩ Execute PHP</button> -->
             </div>
-            <div id="outputprint">
-            </div>
+            <!-- <div id="outputprint"> -->
         </div>
+    </div>
     </div>
 
     <script src="index.js"></script>

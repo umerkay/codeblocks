@@ -6,7 +6,7 @@ window.addEventListener("load", () => {
     document.getElementById("droppableRegion").addEventListener("dragover", dragover_handler)
 
     for (let droppable of toRender) {
-        if(typeof droppable === "string") {
+        if (typeof droppable === "string") {
             let dEl = document.createElement("div");
             dEl.innerHTML = droppable.toUpperCase();
             document.getElementById("droppables").appendChild(dEl);
@@ -47,8 +47,8 @@ function dragover_handler(ev) {
 }
 
 function hasParentWithClass(node, className) {
-    if(node.classList?.contains(className)) return true;
-    if(node.parentNode) return hasParentWithClass(node.parentNode, className);
+    if (node.classList?.contains(className)) return true;
+    if (node.parentNode) return hasParentWithClass(node.parentNode, className);
     return false;
 }
 
@@ -74,17 +74,17 @@ function drop_handler(ev) {
 
         const blockClass = toRender[parseInt(key)];
 
-        if(blockClass.type === "elseif" || blockClass.type === "else") {
-            if(target.classList.contains("if") || target.classList.contains("elseif")) {
+        if (blockClass.type === "elseif" || blockClass.type === "else") {
+            if (target.classList.contains("if") || target.classList.contains("elseif")) {
                 dropCase = "after";
             } else return window.alert("Can only put" + blockClass.type + " after if/elseif block!");
         }
-        
-        if(blockClass.parents) {
-            if(!hasParentWithClass(target, blockClass.parents[0]) && !hasParentWithClass(target, blockClass.parents[1])) {
+
+        if (blockClass.parents) {
+            if (!hasParentWithClass(target, blockClass.parents[0]) && !hasParentWithClass(target, blockClass.parents[1])) {
                 window.alert("Can only put " + blockClass.type + " in " + blockClass.parents.join(" or ") + " block(s)!");
-                return 
-            } else if(target.classList.contains(blockClass.parents[0])){
+                return
+            } else if (target.classList.contains(blockClass.parents[0])) {
                 dropCase = "inside";
             }
         }
@@ -99,7 +99,7 @@ function drop_handler(ev) {
         deleteBtn.classList.add("deleteBtn");
         deleteBtn.addEventListener("click", () => newBlockEl.remove());
 
-        if(blockClass.showTitle != false) {
+        if (blockClass.showTitle != false) {
             const title = document.createElement("div");
             title.innerHTML = blockClass.type;
             title.classList.add("title");
@@ -120,7 +120,7 @@ function drop_handler(ev) {
             const inpElLabel = document.createElement("label");
 
             for (let property in inp) {
-                if(property === "options") {
+                if (property === "options") {
                     inp.options.forEach(opt => {
                         const optEl = document.createElement("option");
                         optEl.innerHTML = opt;
@@ -130,7 +130,7 @@ function drop_handler(ev) {
             }
             inpElLabel.innerHTML = inp.label;
 
-            if(inp.type == "checkbox") {
+            if (inp.type == "checkbox") {
                 inpEl.addEventListener("change", e => newBlock[inp.name] = e.target.checked);
             } else {
                 inpEl.addEventListener("input", e => newBlock[inp.name] = e.target.value);
@@ -170,7 +170,7 @@ function drop_handler(ev) {
         droppableRegionAfter.addEventListener("dragover", dragover_handler);
         newBlockElsCont.appendChild(droppableRegionAfter);
 
-        if(blockClass.showTitle == false) {
+        if (blockClass.showTitle == false) {
             newBlockElsCont.appendChild(deleteBtn);
         }
 
@@ -189,23 +189,23 @@ function drop_handler(ev) {
             target.appendChild(newBlockEl);
         } else if (dropCase === "before") {
             target.parentNode.insertBefore(newBlockEl, target);
-        } else if(dropCase === "after") {
+        } else if (dropCase === "after") {
             target.insertAdjacentElement("afterEnd", newBlockEl);
         }
     } else {
         let BlockEl = document.getElementById(ev.dataTransfer.getData("id"));
 
-        if(BlockEl.classList.contains("elseif") || BlockEl.classList.contains("else")) {
-            if(target.classList.contains("if") || target.classList.contains("elseif")) {
+        if (BlockEl.classList.contains("elseif") || BlockEl.classList.contains("else")) {
+            if (target.classList.contains("if") || target.classList.contains("elseif")) {
                 dropCase = "after";
-            } else return window.alert("Can only put" + blockClass.type + " after if/elseif block!");
+            } else return window.alert("Can only put " + blockClass.type + " after if/elseif block!");
         }
         let blockObj = blocks[parseInt(BlockEl.getAttribute("key"))];
-        if(blockObj.parents) {
-            if(!hasParentWithClass(target, blockObj.parents) && !hasParentWithClass(target, blockObj.parents)) {
+        if (blockObj.parents) {
+            if (!hasParentWithClass(target, blockObj.parents) && !hasParentWithClass(target, blockObj.parents)) {
                 window.alert("Can only put in " + blockObj.parents.join(" or ") + " block(s)!");
-                return 
-            } else if(target.classList.contains(blockObj.parents[0])) {
+                return
+            } else if (target.classList.contains(blockObj.parents[0])) {
                 dropCase = "inside";
             }
         }
@@ -216,7 +216,7 @@ function drop_handler(ev) {
             target.appendChild(BlockEl);
         } else if (dropCase === "before") {
             target.parentNode.insertBefore(BlockEl, target);
-        } else if(dropCase === "after") {
+        } else if (dropCase === "after") {
             target.insertAdjacentElement("afterEnd", BlockEl);
         }
     }
@@ -225,32 +225,48 @@ function drop_handler(ev) {
 }
 
 function generateCode() {
-    document.getElementById("output").innerHTML = "&lt?php";
-    _generateCode(document.getElementById("blocks"), "  ");
-    document.getElementById("output").innerHTML += "</br>?>";
+    let lang = document.getElementById("lang").value;
+    if (lang === "PHP") {
+        document.getElementById("output").innerHTML = "&lt?php";
+    } else if (lang === "C++") {
+        document.getElementById("output").innerHTML =
+            `#include &lt;iostream&gt;<br>
+#include &lt;fstream&gt;<br>
+#include &lt;cmath&gt;<br>
+using namespace std;<br><br>
+int main() {`;
+    } else {
+        document.getElementById("output").innerHTML = "";
+    }
+    _generateCode(document.getElementById("blocks"), "", lang);
+    if (lang === "PHP") {
+        document.getElementById("output").innerHTML += "</br>?>";
+    } else if (lang === "C++") {
+        document.getElementById("output").innerHTML += "\nreturn 0;\n}";
+    }
 }
 
-function _generateCode(el, indent) {
+function _generateCode(el, indent, lang) {
     for (blockEl of el.children) {
-        if (blockEl.getAttribute("id") == "droppableRegion" || blockEl.classList.contains("container")  || blockEl.classList.contains("title")) continue;
+        if (blockEl.getAttribute("id") == "droppableRegion" || blockEl.classList.contains("container") || blockEl.classList.contains("title")) continue;
         let blockObj = blocks[parseInt(blockEl.getAttribute("key"))];
         if (blockEl.classList.contains("canHaveChild")) {
-            document.getElementById("output").innerHTML += "<br>" + indent + blockObj.toPHP();
-            _generateCode(blockEl, indent + "   ");
-            document.getElementById("output").innerHTML += "<br>" + indent + (blockObj.endPHP instanceof Function ? blockObj.endPHP() : "}");
+            document.getElementById("output").innerHTML += "<br>" + indent + blockObj.to(lang);
+            _generateCode(blockEl, indent + "   ", lang);
+            document.getElementById("output").innerHTML += "<br>" + indent + (blockObj.end instanceof Function ? blockObj.end(lang) : "}");
         } else {
-            document.getElementById("output").innerHTML += "<br>" + indent + blockObj.toPHP();
+            document.getElementById("output").innerHTML += "<br>" + indent + blockObj.to(lang);
         }
     }
 }
 
-function execAndGetPHPOutput() {
-    let code = document.getElementById("output").innerText;
-    let xhr = new XMLHttpRequest();
-    xhr.open("POST", "php.php", true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhr.send("code=" + encodeURIComponent(code));
-    xhr.onload = () => {
-        document.getElementById("output").innerHTML = xhr.responseText;
-    }
-}
+// function execAndGetPHPOutput() {
+//     let code = document.getElementById("output").innerText;
+//     let xhr = new XMLHttpRequest();
+//     xhr.open("POST", "php.php", true);
+//     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+//     xhr.send("code=" + encodeURIComponent(code));
+//     xhr.onload = () => {
+//         document.getElementById("output").innerHTML = xhr.responseText;
+//     }
+// }

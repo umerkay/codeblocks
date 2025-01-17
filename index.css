@@ -304,7 +304,7 @@ code {
 
 #outputContainer {
   display: grid;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: 1fr;
   gap: 1rem;
   max-height: calc(97vh - 50px);
 }
@@ -314,6 +314,11 @@ code {
   flex-direction: column;
   height: 100%;
 }
+#outputContainer .outputcode select {
+  border: 2px solid #797979;
+  padding: 1rem;
+}
+
 #outputContainer .outputcode button {
   border-radius: 10rem;
   background-color: rgb(123, 0, 255);
@@ -335,8 +340,8 @@ code {
   padding: 1rem;
   overflow: auto;
   max-width: 400px;
-  height: 300px;
-  max-height: 400px;
+  height: 100%;
+  /* max-height: 400px; */
 }
 #outputContainer #outputprint {
   display: block;
