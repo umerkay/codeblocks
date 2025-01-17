@@ -8,8 +8,7 @@
     fclose($myfile);
 
     //execute the code
-    $output = shell_exec('php code.php');
+    system("C:\wamp\bin\php\php8.1.13\php.exe -f code.php 2>&1", $output);
 
-    //return the output
     echo $output;
 ?>
